@@ -1,19 +1,17 @@
-﻿@inject AppTenant Tenant;
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@Tenant.Name debugger</title>
+    <title>OIDC debugger</title>
     
     @Html.Partial("_Favicons")
 
-    <meta name="description" content="Test and debug @Tenant.Name requests. This free tool makes it easy to send requests and view responses." />
+    <meta name="description" content="Test and debug oidc requests. This free tool makes it easy to send requests and view responses." />
     <meta property="og:type" content="website" />
-    <meta property="og:description" content="Test and debug @Tenant.Name requests. This free tool makes it easy to send requests and view responses." />
-    <meta property="og:title" content="@Tenant.Name debugger" />
+    <meta property="og:description" content="Test and debug oidc requests. This free tool makes it easy to send requests and view responses." />
+    <meta property="og:title" content="OIDC debugger" />
     <meta property="og:image" content="@Url.AbsoluteContent("~/images/gear-sm.png")" />
     <meta property="og:url" content="@Url.AbsoluteContent("~")" />
 
@@ -30,30 +28,30 @@
     </environment>
     
     <environment names="Staging,Production">
-      <script async src="https://www.googletagmanager.com/gtag/js?id=@Tenant.GoogleTrackingId"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106432346-2"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments)};
         gtag('js', new Date());
 
-        gtag('config', '@Tenant.GoogleTrackingId');
+        gtag('config', 'UA-106432346-2');
       </script>
 
     </environment>
     <script>
-      window.tenant = '@Tenant.Shortname';
+      window.tenant = 'oidc';
     </script>
   </head>
 
   <body>
 
-    <header class="debug__header @(Tenant.Shortname == "oauth" ? "header-oauth" : "header-oidc")">
+    <header class="debug__header header-oauth header-oidc">
       <div class="debug__header-content">
         <h1>
-          <strong>@Tenant.Name</strong> &lt;debugger/&gt;
+          <strong>OIDC</strong> &lt;debugger/&gt;
         </h1>
         <p>
-          Test @Tenant.Name requests and debug responses.
+          Test OIDC requests and debug responses.
         </p>
         <span class="debug__author">
           <small>

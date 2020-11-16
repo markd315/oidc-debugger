@@ -1,6 +1,4 @@
-﻿@inject AppTenant Tenant
-
-@{
+﻿@{
   ViewData["Title"] = "Create a request";
 }
 
@@ -61,7 +59,7 @@
 
       <div class="col-5">
           <info-card v-show="selected === 'authorizeUri'" title="Authorize URI">
-          <p>The <b>authorize URI</b> on the authorization server is where an @Tenant.Name flow starts.</p>
+          <p>The <b>authorize URI</b> on the authorization server is where an authcode flow starts.</p>
           </info-card>
 
           <info-card v-show="selected === 'redirectUri'" title="Redirect URI">
@@ -75,16 +73,10 @@
 
           <info-card v-show="selected === 'scopes'" title="Scope">
           <p>Clients can request additional information or permissions via <b>scopes</b>.
-          @if (Tenant.Shortname == "oidc")
-          {
               <text>The <code>openid</code> scope is the only required scope.</text>
-          }
           </p>
-          @if (Tenant.Shortname == "oidc")
-          {
               <p>The OpenID Connect spec defines some <a href="http://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims">standard scopes</a>,
               and applications can define their own custom scopes as well.</p>
-          }
           </info-card>
 
           <info-card v-show="selected === 'state'" title="State">
@@ -114,14 +106,11 @@
                           v-model="responseTypesArray" v-on:focus="showInfo" v-on:click="saveParameters" required>
                       <label for="responseType-token" class="select-label">token</label>
                   </div>
-                  @if (Tenant.Shortname == "oidc")
-                  {
                   <div class="form-group">
                       <input type="checkbox" id="responseType-id_token" value="id_token"
                           v-model="responseTypesArray" v-on:focus="showInfo" v-on:click="saveParameters" required>
                       <label for="responseType-id_token" class="select-label">id_token</label>
                   </div>
-                  }
               </div>
           </div>
       </div>

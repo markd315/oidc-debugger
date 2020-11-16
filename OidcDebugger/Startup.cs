@@ -47,8 +47,8 @@ namespace OidcDebugger
 
         private void ConfigureCommonServices(IServiceCollection services)
         {
-            services.Configure<MultitenancyOptions>(Configuration.GetSection("Multitenancy"));
-            services.AddMultitenancy<AppTenant, AppTenantResolver>();
+            //services.Configure<MultitenancyOptions>(Configuration.GetSection("Multitenancy"));
+            //services.AddMultitenancy<AppTenant, AppTenantResolver>();
 
             services.AddMvc();
         }
@@ -58,21 +58,22 @@ namespace OidcDebugger
         {
             app.UseForwardedHeaders();
 
+            var _logger = LoggerFactory.CreateLogger("Debug");
             app.Use(async (context, next) =>
             {
                 // Request method, scheme, and path
-                Logger.LogDebug("Request Method: {Method}", context.Request.Method);
-                Logger.LogDebug("Request Scheme: {Scheme}", context.Request.Scheme);
-                Logger.LogDebug("Request Path: {Path}", context.Request.Path);
+                _logger.LogDebug("Request Method: {Method}", context.Request.Method);
+                _logger.LogDebug("Request Scheme: {Scheme}", context.Request.Scheme);
+                _logger.LogDebug("Request Path: {Path}", context.Request.Path);
 
                 // Headers
                 foreach (var header in context.Request.Headers)
                 {
-                    Logger.LogDebug("Header: {Key}: {Value}", header.Key, header.Value);
+                    _logger.LogDebug("Header: {Key}: {Value}", header.Key, header.Value);
                 }
 
                 // Connection: RemoteIp
-                Logger.LogDebug("Request RemoteIp: {RemoteIpAddress}", 
+                _logger.LogDebug("Request RemoteIp: {RemoteIpAddress}", 
                     context.Connection.RemoteIpAddress);
 
                 await next();
@@ -102,7 +103,7 @@ namespace OidcDebugger
             app.UseXXssProtection(options => options.EnabledWithBlockMode());
             app.UseXContentTypeOptions();
 
-            app.UseMultitenancy<AppTenant>();
+            //app.UseMultitenancy<AppTenant>();
 
             app.UseMvc();
         }
