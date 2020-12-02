@@ -1,24 +1,29 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM microsoft/aspnetcore-build:2.0 AS buildnet
 WORKDIR /app
-
-# Copy csproj and restore as distinct layers
 COPY ./OidcDebugger/*.csproj ./
+COPY ./OidcDebugger/wwwroot /var/www/html
 RUN dotnet restore
-
-# Prevent 'Warning: apt-key output should not be parsed (stdout is not a terminal)'
-ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
-ENV ASPNETCORE_ENVIRONMENT=Development
-
-# install NodeJS 13.x
-# see https://github.com/nodesource/distributions/blob/master/README.md#deb
-RUN apt-get update -yq 
-RUN apt-get install curl gnupg -yq 
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
-RUN apt-get install -y nodejs
-
 # Copy everything else and build
 COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o /dist
 
-ENTRYPOINT ["dotnet", "/app/OidcDebugger/out/OidcDebugger.dll"]
-EXPOSE 80
+# build Vue app:
+FROM node:erbium-alpine3.9 as buildvue
+WORKDIR /src
+COPY package.json .
+COPY OidcDebugger OidcDebugger
+COPY webpack.config.js .
+RUN npm install
+# webpack build
+RUN npm run build
+
+FROM microsoft/aspnetcore-build:2.0 as final
+WORKDIR /app
+ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+#ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_URLS http://+:5000
+COPY --from=buildnet /dist .
+# copy vue content into .net's static files folder:
+COPY --from=buildvue /src /app/wwwroot
+EXPOSE 5000
+ENTRYPOINT ["dotnet", "OidcDebugger.dll"]

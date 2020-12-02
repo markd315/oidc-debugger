@@ -24,13 +24,33 @@ The debugger will capture the callback and help you understand what happened (wh
 
 ## Contributing
 
-Issues and PRs are welcome! The project is built with ASP.NET Core and Vue.js.
+Issues and PRs are welcome! The project is built with ASP.NET Core, Docker, and Vue.js.
 
 To build and run locally,
 
 ```
-git clone https://github.com/nbarbettini/oidc-debugger
+git clone https://github.com/markd315/oidc-debugger.git
 cd oidc-debugger
-dotnet build
-dotnet run
+docker build -t oidcdebugger-local .
+docker run -d -p 3000:5000 oidcdebugger-local:latest
+```
+
+You can tag and push a new version like this
+```
+docker tag oidcdebugger-local identity-docker-prod.mia.ulti.io/identity/oidcdebugger:latest
+docker push identity-docker-prod.mia.ulti.io/identity/oidcdebugger:latest
+```
+
+kube
+```
+helm2 ls
+helm2 del --purge oidcdebugger
+cd identity-k8s #(repo in Platform Services bitbucket)
+helm2 install --name oidcdebugger helm/oidcdebugger
+k get pods -n oidcdebugger
+
+sudo su -
+
+export KUBECONFIG=/Users/markda/identity-k8s/k8s/identity-V16/config #wherever you cloned your repo to, but port-forward needs sudo
+kubectl port-forward -n oidcdebugger oidcdebugger-app-hash 80:5000
 ```

@@ -103,7 +103,6 @@ new Vue({
 
 function parseValues(source) {
   var result = [];
-
   var vars = source.substring(1).split('&');
   for (var i = 0; i < vars.length; i++) {
       var pair = vars[i].split('=');

@@ -13,6 +13,7 @@ namespace OidcDebugger
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(opt => opt.AddServerHeader = false)
+                //.UseWebRoot("/var/www/html")
                 .UseStartup<Startup>()
                 .Build();
     }
